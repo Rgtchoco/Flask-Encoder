@@ -260,6 +260,25 @@ async def something():
 ########### Start ############
 
 LOGS.info("Bot has started.")
-with bot:
+
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+if __name__ == '__main__':
+    # Set the desired host and port
+    host = '0.0.0.0'  # or '127.0.0.1' for localhost
+    port = 8080  # or any other available port
+
+    # Flask app runs in a separate thread
+    from threading import Thread
+    t = Thread(target=app.run, kwargs={'host': host, 'port': port})
+    t.start()
+
+    with bot:
     bot.loop.run_until_complete(something())
     bot.loop.run_forever()
